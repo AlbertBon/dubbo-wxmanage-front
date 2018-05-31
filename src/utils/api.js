@@ -66,17 +66,23 @@ import { getToken } from '@/utils/auth'
 // export default service
 
 axios.interceptors.request.use(config => {
+  config.withCredentials = true;
   return config;
 }, err => {
   Message.error({message: '请求超时!'});
   return Promise.resolve(err);
 })
-axios.interceptors.response.use(data => {
-  if (data.status && data.status == 200 && data.data.status == 'error') {
-    Message.error({message: data.data.msg});
+axios.interceptors.response.use(response => {
+  const data = response.data;
+  if (data.code && data.code != '00') {
+    Message({
+      message: data.message,
+      type: 'error',
+      duration: 5 * 1000
+    })
     return;
   }
-  return data;
+  return response;
 }, err => {
   if (err.response.status == 504 || err.response.status == 404) {
     Message.error({message: '服务器被吃了⊙﹏⊙∥'});
@@ -95,15 +101,8 @@ export const postRequest = (url, params) => {
     method: 'post',
     url: `${base}${url}`,
     data: params,
-    transformRequest: [function (data) {
-      let ret = ''
-      for (let it in data) {
-        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-      }
-      return ret
-    }],
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/json;charset=utf-8'
     }
   });
 }

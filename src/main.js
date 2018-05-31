@@ -14,9 +14,6 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-// import axios from 'axios'
-// axios.defaults.headers.post['Content-Type']='application/json';  //设置默认post为json格式
-// Vue.prototype.$axios = axios;  //为axios设置全局方法变量
 import {getRequest} from './utils/api'
 import {postRequest} from './utils/api'
 Vue.prototype.postRequest = postRequest;

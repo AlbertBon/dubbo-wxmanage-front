@@ -7,29 +7,44 @@
         <span class="svg-container svg-container_login">
           <i class="fa fa-user" aria-hidden="true"></i>
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username"/>
+        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="用户名"/>
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
           <i class="fa fa-key" aria-hidden="true"></i>
         </span>
-        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password"
+        <el-input name="password" :type="pwdType" v-model="loginForm.password"
                   autoComplete="on"
-                  placeholder="password"></el-input>
+                  placeholder="密码"></el-input>
         <span class="show-pwd" @click="showPwd">
           <i class="fa fa-eye-slash" aria-hidden="true" v-if="pwdType == 'password'"></i>
           <i class="fa fa-eye" aria-hidden="true" v-if="pwdType == ''"></i>
         </span>
       </el-form-item>
+      <el-row :gutter="20">
+        <el-col :span="16">
+          <el-form-item prop="code">
+            <div class="grid-content bg-purple">
+              <el-input name="code" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.code" placeholder="验证码"/>
+            </div>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <div class="grid-content bg-purple login-code-container" @click="refreshCode">
+            <img :src="codeImg" class="login-code">
+          </div>
+        </el-col>
+      </el-row>
+
       <el-form-item>
         <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
-          Sign in
+          登录
         </el-button>
       </el-form-item>
-      <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: admin</span>
-      </div>
+      <!--<div class="tips">-->
+        <!--<span style="margin-right:20px;">username: admin</span>-->
+        <!--<span> password: admin</span>-->
+      <!--</div>-->
     </el-form>
   </div>
 </template>
@@ -48,23 +63,26 @@
         }
       }
       const validatePass = (rule, value, callback) => {
-        if (value.length < 5) {
-          callback(new Error('密码不能小于5位'))
+        if (value.length < 3) {
+          callback(new Error('密码不能小于3位'))
         } else {
           callback()
         }
       }
       return {
         loginForm: {
-          username: 'admin',
-          password: 'admin'
+          username: 'bon',
+          password: '123123',
+          code: ''
         },
         loginRules: {
           username: [{required: true, trigger: 'blur', validator: validateUsername}],
-          password: [{required: true, trigger: 'blur', validator: validatePass}]
+          password: [{required: true, trigger: 'blur', validator: validatePass}],
+          code:[{required:true,trigger:'blur',message:'验证码不能为空'}]
         },
         loading: false,
-        pwdType: 'password'
+        pwdType: 'password',
+        codeImg: process.env.BASE_API + '/login/getImageCode?random=' + Math.random()
       }
     },
     methods: {
@@ -75,18 +93,18 @@
           this.pwdType = 'password'
         }
       },
+      refreshCode(){
+        this.codeImg = process.env.BASE_API + '/login/getImageCode?random=' + Math.random();
+      },
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
           if (valid) {
             let _this = this;
             this.loading = true;
-            this.postRequest('/user/login', {
-              username: this.loginForm.username,
-              password: this.loginForm.password
-            }).then(resp => {
+            this.postRequest('/login/loginIn', this.loginForm).then(resp => {
               _this.loading = false;
               const data = resp.data;
-              if (data && data.code == 20000) {
+              if (data && data.code == '00') {
                 _this.$store.commit('SET_TOKEN', data.token);
                 _this.$router.push({path: '/'});
               }
@@ -198,6 +216,13 @@
     cursor: pointer;
     user-select: none;
   }
+  .login-code-container{
+    text-align: center;
+  .login-code{
+    margin-top: 3px;
+  }
+  }
+
   }
 </style>
 

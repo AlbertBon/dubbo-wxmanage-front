@@ -10,11 +10,11 @@
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
         <router-link class="inlineBlock" to="/">
           <el-dropdown-item>
-            Home
+            主页
           </el-dropdown-item>
         </router-link>
         <el-dropdown-item divided>
-          <span @click="logout" style="display:block;">LogOut</span>
+          <span @click="logout" style="display:block;">退出</span>
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -50,7 +50,7 @@ export default {
     },
     logout() {
       let _this=this;
-      this.postRequest('/user/logout').then(resp => {
+      this.postRequest('/login/loginOut').then(resp => {
         _this.$store.commit('SET_TOKEN', '')
         _this.$store.commit('SET_ROLES', [])
         _this.$store.commit('REMOVE_TOKEN')
