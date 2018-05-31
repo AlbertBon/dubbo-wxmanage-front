@@ -19,8 +19,10 @@ import store from './store'
 // Vue.prototype.$axios = axios;  //为axios设置全局方法变量
 import {getRequest} from './utils/api'
 import {postRequest} from './utils/api'
+Vue.prototype.postRequest = postRequest;
+Vue.prototype.getRequest = getRequest;
 
-import '@/icons' // icon
+import 'font-awesome/css/font-awesome.css'//导入字体图标
 
 Vue.use(ElementUI, { locale })
 

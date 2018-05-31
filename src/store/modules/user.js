@@ -11,16 +11,20 @@ const user = {
 
   mutations: {
     SET_TOKEN: (state, token) => {
-      state.token = token
+      state.token = token;
+      setToken(token);
     },
     SET_NAME: (state, name) => {
-      state.name = name
+      state.name = name;
     },
     SET_AVATAR: (state, avatar) => {
-      state.avatar = avatar
+      state.avatar = avatar;
     },
     SET_ROLES: (state, roles) => {
-      state.roles = roles
+      state.roles = roles;
+    },
+    REMOVE_TOKEN:(state) => {
+      removeToken();
     }
   },
 

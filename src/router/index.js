@@ -42,21 +42,21 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
+    meta: { title: 'Example', icon: 'fa fa-bars' },
     children: [
       {
         path: 'table',
         name: 'Table',
         component: () => import('@/views/dashboard/index'),
         // component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        meta: { title: 'Table', icon: 'fa fa-table' }
       },
       {
         path: 'tree',
         name: 'Tree',
         component: () => import('@/views/dashboard/index'),
         // component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        meta: { title: 'Tree', icon: 'fa fa-tree' }
       }
     ]
   },
