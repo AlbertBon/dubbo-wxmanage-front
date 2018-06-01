@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+const _import = require('./_import_' + process.env.NODE_ENV)
 
 // in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
@@ -22,57 +23,51 @@ import Layout from '../views/layout/Layout'
   }
 **/
 export const constantRouterMap = [
-  { path: '/login', component: () => import('@/views/login/index'), hidden: true },
-  { path: '/404', component: () => import('@/views/404'), hidden: true },
+  { path: '/login', component: _import('login/index'), hidden: true },
+  { path: '/404', component: _import('404'), hidden: true },
 
   {
-    path: '/',
+    path: '',
     component: Layout,
-    redirect: '/dashboard',
-    name: 'Dashboard',
-    hidden: true,
-    children: [{
-      path: 'dashboard',
-      component: () => import('@/views/dashboard/index')
-    }]
-  },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'fa fa-bars' },
+    redirect: 'home',
+    name: '主页',
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/dashboard/index'),
-        // component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'fa fa-table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/dashboard/index'),
-        // component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'fa fa-tree' }
+        path: 'home',
+        name: '主页',
+        component: _import('dashboard/index'),
+        meta: {title: '主页', icon: 'fa fa-home'}
       }
     ]
   },
-  //
-  // {
-  //   path: '/form',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'Form',
-  //       component: () => import('@/views/form/index'),
-  //       meta: { title: 'Form', icon: 'form' }
-  //     }
-  //   ]
-  // },
+
+  {
+    path: '/users',
+    component: Layout,
+    redirect: '/users/list',
+    name: '用户管理',
+    meta: { title: '用户管理', icon: 'fa fa-users' },
+    children: [
+      {
+        path: 'list',
+        name: '用户列表',
+        component: _import('user/UserList'),
+        meta: { title: '用户列表', icon: 'fa fa-list-ul' }
+      },
+      {
+        path: 'add',
+        name: '添加用户',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '添加用户', icon: 'fa fa-user-plus' }
+      },
+      {
+        path: 'update',
+        name: '修改用户',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '修改用户', icon: 'fa fa-pencil' }
+      }
+    ]
+  },
 
   { path: '*', redirect: '/404', hidden: true }
 ]

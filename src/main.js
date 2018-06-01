@@ -10,6 +10,12 @@ import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
 import '@/styles/index.scss' // global css
 
+import * as filters from './filters' // global filters
+// register global utility filters.
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
+
 import App from './App'
 import router from './router'
 import store from './store'
