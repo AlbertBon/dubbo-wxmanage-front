@@ -80,7 +80,6 @@ axios.interceptors.response.use(response => {
       type: 'error',
       duration: 5 * 1000
     })
-    return;
   }
   return response;
 }, err => {

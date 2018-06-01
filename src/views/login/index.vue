@@ -104,8 +104,10 @@
             this.postRequest('/login/loginIn', this.loginForm).then(resp => {
               _this.loading = false;
               const data = resp.data;
-              _this.$store.commit('SET_TOKEN', data.token);
-              _this.$router.push({path: '/'});
+              if(data){
+                _this.$store.commit('SET_TOKEN', data.token);
+                _this.$router.push({path: '/'});
+              }
             }).catch(()=>{
               this.loading = false
             })

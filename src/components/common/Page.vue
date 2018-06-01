@@ -55,9 +55,8 @@
           checkBox:Boolean,  //决定是否显示复选框
           description:String, //分页脚底左侧的数据说明
           tableHeight:Number,  //分页列表的高度
-          pageSize:Number,     //页面大小               
+          pageSize:Number,     //页面大小
           sortChange:Function //用户点击列表头进行排序 { column, prop, order }
-
       },
     watch:{
       pageSize:"changeSize"
