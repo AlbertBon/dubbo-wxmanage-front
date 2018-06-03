@@ -21,7 +21,7 @@
       </el-table-column>
       <el-table-column min-width="110px" align="center" label="角色名">
         <template slot-scope="scope">
-          <span class="link-type">{{scope.row.roleName}}</span>
+          <span>{{scope.row.roleName}}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="110px" align="center" label="角色标识">

@@ -23,8 +23,8 @@ import Layout from '../views/layout/Layout'
   }
 **/
 export const constantRouterMap = [
-  { path: '/login', component: _import('login/index'), hidden: true },
-  { path: '/404', component: _import('404'), hidden: true },
+  { path: '/login', component: _import('/login/index'), hidden: true },
+  { path: '/404', component: _import('/404'), hidden: true },
 
   {
     path: '',
@@ -34,7 +34,7 @@ export const constantRouterMap = [
       {
         path: 'home',
         name: '主页',
-        component: _import('dashboard/index'),
+        component: _import('/dashboard/index'),
         meta: {title: '主页', icon: 'fa fa-home'}
       }
     ]
@@ -49,19 +49,18 @@ export const constantRouterMap = [
     children: [
       {
         path: 'user/list',
-        name: '用户列表',
-        component: _import('admin/UserList'),
-        meta: { title: '用户列表', icon: 'fa fa-users' }
+        name: '用户管理',
+        component: _import('/admin/UserList'),
+        meta: { title: '用户管理', icon: 'fa fa-users' }
       },
       {
         path: 'role/list',
-        name: '角色列表',
-        component: _import('admin/RoleList'),
-        meta: { title: '角色列表', icon: 'fa fa-user-circle-o' }
+        name: '角色管理',
+        component: _import('/admin/RoleList'),
+        meta: { title: '角色管理', icon: 'fa fa-user-circle-o' }
       }
     ]
   },
-
   { path: '*', redirect: '/404', hidden: true }
 ]
 
