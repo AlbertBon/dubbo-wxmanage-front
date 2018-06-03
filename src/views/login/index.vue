@@ -101,11 +101,14 @@
           if (valid) {
             let _this = this;
             this.loading = true;
+            console.log(_this.$store.getters.token);
             this.postRequest('/login/loginIn', this.loginForm).then(resp => {
               _this.loading = false;
               const data = resp.data;
-              if(data){
-                _this.$store.commit('SET_TOKEN', data.token);
+              if(data.code=='00'){
+                _this.$store.commit('SET_TOKEN', data.data.token);
+                _this.$store.commit('SET_NAME', data.data.name);
+                console.log(_this.$store.getters.token);
                 _this.$router.push({path: '/'});
               }
             }).catch(()=>{

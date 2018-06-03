@@ -1,11 +1,20 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-input style="width: 200px;" class="filter-item" placeholder="查询条件">
+      <el-input style="width: 200px;" v-model="listParams.keyMap.equal_userId" class="filter-item" placeholder="序号">
       </el-input>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search">搜索</el-button>
-      <el-button @click="handleCreate" class="filter-item" style="margin-left: 10px;" type="primary"
-                 icon="el-icon-edit">
+      <el-input style="width: 200px;" v-model="listParams.keyMap.equal_username" class="filter-item" placeholder="用户名">
+      </el-input>
+      <el-date-picker style="width: 200px;" v-model="listParams.keyMap.greater_gmtCreate" type="datetime"
+                      class="filter-item" placeholder="起始时间" value-format="yyyy-MM-dd HH:mm:ss">
+      </el-date-picker>  -
+      <el-date-picker style="width: 200px;" v-model="listParams.keyMap.less_gmtCreate" type="datetime"
+                      class="filter-item" placeholder="结束时间" value-format="yyyy-MM-dd HH:mm:ss">
+      </el-date-picker>
+      <el-button class="filter-item" @click="getList" style="margin-left: 10px;" type="primary" icon="el-icon-search">
+        搜索
+      </el-button>
+      <el-button @click="handleCreate" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">
         新增
       </el-button>
     </div>
@@ -16,11 +25,6 @@
       <el-table-column align="center" label="序号" width="65">
         <template slot-scope="scope">
           <span>{{scope.row.userId}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="150px" align="center" label="创建时间">
-        <template slot-scope="scope">
-          <span>{{scope.row.gmtCreate | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
       </el-table-column>
       <el-table-column width="150px" align="center" label="姓名">
@@ -36,6 +40,11 @@
       <el-table-column width="110px" align="center" label="手机">
         <template slot-scope="scope">
           <span>{{scope.row.phone}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="150px" align="center" label="创建时间">
+        <template slot-scope="scope">
+          <span>{{scope.row.gmtCreate | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="150px" label="地址">
@@ -61,10 +70,9 @@
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible">
       <el-form ref="userForm" :rules="rules" :model="userParams" label-position="left" label-width="70px"
                style='width: 400px; margin-left:50px;'>
-        <el-form-item  prop="username">
+        <el-form-item v-show="false" prop="userId">
           <el-input v-model="userParams.userId"></el-input>
         </el-form-item>
-
         <el-form-item label="用户名" prop="username">
           <el-input v-model="userParams.username"></el-input>
         </el-form-item>
@@ -103,7 +111,9 @@
         listLoading: true,
         listParams: {
           pageSize: 2,
-          pageNum: 1
+          pageNum: 1,
+          keyMap:{},
+          orderBy:''
         },
         pageSizes: [2, 5, 10, 20],
         pageInfo: {
@@ -118,7 +128,7 @@
           password:[{required:true,message:'请输入密码',trigger:'blur'}],
           name:[{required:true,message:'请输入姓名',trigger:'blur'}],
           phone:[{pattern:/^1(3|4|5|7|8)\d{9}$/,message:'请输入正确手机号码',trigger:'blur'}],
-        }
+        },
       }
     },
     created() {
@@ -128,7 +138,7 @@
       getList() {
         let _this = this;
         this.listLoading = true;
-        this.postRequest('/user/list', this.listParams).then(res => {
+        this.postRequest('/user/listUser', this.listParams).then(res => {
           _this.listLoading = false;
           if (res.data.code == '00') {
             this.pageInfo = res.data.data;
@@ -151,7 +161,7 @@
         this.dialogTitle = '新增用户';
       },
       createUser() {
-        this.postRequest('/user/addUser', this.userParams).then(res => {
+        this.postRequest('/user/saveUser', this.userParams).then(res => {
           if (res.data.code == '00') {
             this.$message.success('新增成功');
             this.dialogFormVisible = false;
@@ -165,7 +175,7 @@
         }
         this.dialogFormVisible = true;
         this.dialogTitle = '修改用户';
-        this.getRequest('/user/query?key='+userId).then(res => {
+        this.getRequest('/user/getUser?key='+userId).then(res => {
           if (res.data.code == '00') {
             this.userParams = res.data.data;
           }

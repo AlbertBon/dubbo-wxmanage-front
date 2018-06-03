@@ -41,29 +41,23 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/users',
+    path: '/admin',
     component: Layout,
-    redirect: '/users/list',
-    name: '用户管理',
-    meta: { title: '用户管理', icon: 'fa fa-users' },
+    redirect: '/admin/user/list',
+    name: '系统管理',
+    meta: { title: '系统管理', icon: 'fa fa-cogs' },
     children: [
       {
-        path: 'list',
+        path: 'user/list',
         name: '用户列表',
-        component: _import('user/UserList'),
-        meta: { title: '用户列表', icon: 'fa fa-list-ul' }
+        component: _import('admin/UserList'),
+        meta: { title: '用户列表', icon: 'fa fa-users' }
       },
       {
-        path: 'add',
-        name: '添加用户',
-        component: () => import('@/views/dashboard/index'),
-        meta: { title: '添加用户', icon: 'fa fa-user-plus' }
-      },
-      {
-        path: 'update',
-        name: '修改用户',
-        component: () => import('@/views/dashboard/index'),
-        meta: { title: '修改用户', icon: 'fa fa-pencil' }
+        path: 'role/list',
+        name: '角色列表',
+        component: _import('admin/RoleList'),
+        meta: { title: '角色列表', icon: 'fa fa-user-circle-o' }
       }
     ]
   },

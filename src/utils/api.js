@@ -2,7 +2,7 @@ import router from '../router'
 import axios from 'axios'
 import {Message} from 'element-ui'
 import store from '../store'
-import { getToken } from '@/utils/auth'
+import { getToken,removeToken } from '@/utils/auth'
 
 axios.interceptors.request.use(config => {
   config.withCredentials = true;
@@ -21,6 +21,9 @@ axios.interceptors.response.use(response => {
       showClose:true,
     })
     if(data.code==='100007'){//登录信息过期
+      store.commit('SET_TOKEN', '')
+      store.commit('SET_ROLES', [])
+      store.commit('REMOVE_TOKEN')
       router.push({path:'/login'});
     }
   }
