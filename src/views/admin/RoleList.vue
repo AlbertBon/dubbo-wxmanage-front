@@ -58,7 +58,7 @@
         <el-form-item label="角色名" prop="roleName">
           <el-input v-model="roleParams.roleName"></el-input>
         </el-form-item>
-        <el-form-item label="角色标识" prop="roleFlag" >
+        <el-form-item label="标识" prop="roleFlag" >
           <el-input v-model="roleParams.roleFlag"></el-input>
         </el-form-item>
       </el-form>

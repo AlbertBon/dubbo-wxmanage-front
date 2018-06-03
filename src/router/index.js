@@ -29,11 +29,13 @@ export const constantRouterMap = [
   {
     path: '',
     component: Layout,
+    name: '主页',
     redirect: 'home',
     children: [
       {
         path: 'home',
         name: '主页',
+        alwaysShow:false,
         component: _import('/dashboard/index'),
         meta: {title: '主页', icon: 'fa fa-home'}
       }
@@ -58,7 +60,13 @@ export const constantRouterMap = [
         name: '角色管理',
         component: _import('/admin/RoleList'),
         meta: { title: '角色管理', icon: 'fa fa-user-circle-o' }
-      }
+      },
+      {
+        path: 'menu/list',
+        name: '菜单管理',
+        component: _import('/admin/MenuList'),
+        meta: { title: '菜单管理', icon: 'fa fa-bars' }
+      },
     ]
   },
   { path: '*', redirect: '/404', hidden: true }
