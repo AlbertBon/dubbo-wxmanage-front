@@ -1,7 +1,7 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-input style="width: 200px;" v-model="listParams.keyMap.equal_name" class="filter-item" placeholder="用户名">
+      <el-input style="width: 200px;" v-model="listParams.keyMap.equal_name" class="filter-item" placeholder="菜单名">
       </el-input>
       <el-button class="filter-item" @click="getList" style="margin-left: 10px;" type="primary" icon="el-icon-search">
         搜索
@@ -16,38 +16,40 @@
               style="width: 100%">
       <el-table-column align="center" label="序号" width="65">
         <template slot-scope="scope">
-          <span>{{scope.row.userId}}</span>
+          <span>{{scope.row.menuId}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="150px" align="center" label="姓名">
+      <el-table-column width="150px" align="center" label="菜单名称">
         <template slot-scope="scope">
           <span class="link-type">{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="110px" align="center" label="登录名">
+      <el-table-column width="150px" align="center" label="菜单标题">
         <template slot-scope="scope">
-          <span>{{scope.row.username}}</span>
+          <span class="link-type">{{scope.row.title}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="110px" align="center" label="手机">
+      <el-table-column width="110px" align="center" label="链接地址">
         <template slot-scope="scope">
-          <span>{{scope.row.phone}}</span>
+          <span>{{scope.row.path}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="150px" align="center" label="创建时间">
+
+      <el-table-column width="110px" align="center" label="菜单图标">
         <template slot-scope="scope">
-          <span>{{scope.row.gmtCreate | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <span>{{scope.row.icon}}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="150px" label="地址">
+      <el-table-column min-width="130px" align="center" label="视图地址">
         <template slot-scope="scope">
-          <span>{{scope.row.address}}</span>
+          <span>{{scope.row.component}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row.userId)">修改</el-button>
-          <el-button type="danger" size="mini" @click="handleDel(scope.row.userId)">删除</el-button>
+          <el-button type="primary" size="mini" @click="handleCreateChild(scope.row.menuId)">子菜单</el-button>
+          <el-button type="primary" size="mini" @click="handleUpdate(scope.row.menuId)">修改</el-button>
+          <el-button type="danger" size="mini" @click="handleDel(scope.row.menuId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -60,41 +62,40 @@
       @handleCurrentChange="handleCurrentChange"></pagination>
 
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible">
-      <el-form ref="userForm" :rules="rules" :model="userParams" label-position="left" label-width="70px"
+      <el-form ref="menuForm" :rules="rules" :model="menuParams" label-position="left" label-width="70px"
                style='width: 400px; margin-left:50px;'>
-        <el-form-item v-show="false" prop="userId">
-          <el-input v-model="userParams.userId"></el-input>
+        <el-form-item v-show="false" prop="menuId">
+          <el-input v-model="menuParams.menuId"></el-input>
         </el-form-item>
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="userParams.username"></el-input>
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="menuParams.name"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="userParams.password"></el-input>
+        <el-form-item label="链接地址" prop="path">
+          <el-input v-model="menuParams.path"></el-input>
         </el-form-item>
-        <el-form-item label="确认密码" prop="passwordConfirm"
-                      v-if="userParams.password!=undefined&&userParams.password!=''">
-          <el-input type="password" v-model="userParams.passwordConfirm"></el-input>
+        <el-form-item label="文件路径" prop="component">
+          <el-input v-model="menuParams.component"></el-input>
         </el-form-item>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="userParams.name"></el-input>
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="menuParams.title"></el-input>
         </el-form-item>
-        <el-form-item label="角色" prop="roleIds">
-          <el-select v-model="userParams.roleIds" multiple filterable placeholder="请选择">
-            <el-option v-for="item in roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId">
-            </el-option>
+        <el-form-item label="图标" prop="icon">
+          <el-input v-model="menuParams.icon"></el-input>
+        </el-form-item>
+        <el-form-item label="跳转地址" prop="redirect">
+          <el-input v-model="menuParams.redirect"></el-input>
+        </el-form-item>
+        <el-form-item label="是否隐藏" prop="hidden">
+          <el-select v-model="menuParams.hidden" placeholder="请选择">
+            <el-option label="是" value="00"></el-option>
+            <el-option label="否" value="01"></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="电话" prop="phone">
-          <el-input v-model="userParams.phone"></el-input>
-        </el-form-item>
-        <el-form-item label="地址" prop="address">
-          <el-input v-model="userParams.address"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button v-if="dialogTitle=='新增用户'" type="primary" @click="createUser">新增</el-button>
-        <el-button v-else type="primary" @click="updateUser">修改</el-button>
+        <el-button v-if="dialogTitle=='新增菜单'||dialogTitle=='新增子菜单'" type="primary" @click="createMenu">新增</el-button>
+        <el-button v-else type="primary" @click="updateMenu">修改</el-button>
       </div>
     </el-dialog>
 
@@ -109,20 +110,6 @@
       Pagination
     },
     data() {
-      var validatePassword = (rule,value,callback)=>{
-        if(!value&&this.dialogTitle=='新增用户'){
-          return callback(new Error('请输入密码'))
-        }else {
-          return callback()
-        }
-      }
-      var confirmPassword = (rule,value,callback)=>{
-        if(value!=this.userParams.password){
-          return callback(new Error('两次密码不一致'))
-        }else {
-          return callback()
-        }
-      }
       var validateRoleIds = (rule,value,callback)=>{
         if(this.userParams.roleIds.length<=0){
           return callback(new Error('请选择角色'))
@@ -133,7 +120,7 @@
       return {
         listLoading: true,
         listParams: {
-          pageSize: 2,
+          pageSize: 5,
           pageNum: 1,
           keyMap:{},
           orderBy:''
@@ -144,13 +131,10 @@
         },
         dialogFormVisible: false,
         dialogTitle: '',
-        userParams: {
+        menuParams: {
         },
         rules:{
-          username:[{required:true,message:'请输入用户名',trigger:'blur'}],
-          password:[{validator:validatePassword,trigger:'blur'}],
-          passwordConfirm:[{validator:confirmPassword,trigger:'blur'}],
-          name:[{required:true,message:'请输入姓名',trigger:'blur'}],
+          username:[{required:true,message:'请输入菜单名',trigger:'blur'}],
           phone:[{pattern:/^1(3|4|5|7|8)\d{9}$/,message:'请输入正确手机号码',trigger:'blur'}],
           roleIds:[{validator:validateRoleIds,trigger:'change'}],
         },
@@ -166,7 +150,7 @@
       getList() {
         let _this = this;
         this.listLoading = true;
-        this.postRequest('/user/listUser', this.listParams).then(res => {
+        this.postRequest('/menu/listMenu', this.listParams).then(res => {
           _this.listLoading = false;
           if (res.data.code == '00') {
             this.pageInfo = res.data.data;
@@ -189,16 +173,24 @@
         this.getList();
       },
       handleCreate() {
-        if (this.$refs['userForm']!==undefined) {
-          this.$refs['userForm'].resetFields();
+        if (this.$refs['menuForm']!==undefined) {
+          this.$refs['menuForm'].resetFields();
         }
         this.dialogFormVisible = true;
-        this.dialogTitle = '新增用户';
+        this.dialogTitle = '新增菜单';
       },
-      createUser() {
-        this.$refs['userForm'].validate((valid=> {
+      handleCreateChild(menuId) {
+        if (this.$refs['menuForm']!==undefined) {
+          this.$refs['menuForm'].resetFields();
+        }
+        this.menuParams.menuId=menuId;
+        this.dialogFormVisible = true;
+        this.dialogTitle = '新增子菜单';
+      },
+      createMenu() {
+        this.$refs['menuForm'].validate((valid=> {
           if (valid) {
-            this.postRequest('/user/saveUser', this.userParams).then(res => {
+            this.postRequest('/menu/saveMenu', this.menuParams).then(res => {
               if (res.data.code == '00') {
                 this.dialogFormVisible = false;
                 this.$message.success('新增成功');
@@ -208,22 +200,22 @@
           }
         }))
       },
-      handleUpdate(userId) {
-        if (this.$refs['userForm']!==undefined) {
-          this.$refs['userForm'].resetFields();
+      handleUpdate(menuId) {
+        if (this.$refs['menuForm']!==undefined) {
+          this.$refs['menuForm'].resetFields();
         }
         this.dialogFormVisible = true;
-        this.dialogTitle = '修改用户';
-        this.getRequest('/user/getUser?key='+userId).then(res => {
+        this.dialogTitle = '修改菜单';
+        this.getRequest('/menu/getMenu?key='+menuId).then(res => {
           if (res.data.code == '00') {
-            this.userParams = res.data.data;
+            this.menuParams = res.data.data;
           }
         })
       },
-      updateUser(){
-        this.$refs['userForm'].validate((valid=>{
+      updateMenu(){
+        this.$refs['menuForm'].validate((valid=>{
           if(valid){
-            this.postRequest('/user/updateUser', this.userParams).then(res => {
+            this.postRequest('/menu/updateMenu', this.menuParams).then(res => {
               if (res.data.code == '00') {
                 this.dialogFormVisible = false;
                 this.$message.success('修改成功');
@@ -233,13 +225,13 @@
           }
         }))
       },
-      handleDel(userId) {
-        this.$confirm('是否删除该用户', '提示', {
+      handleDel(menuId) {
+        this.$confirm('是否删除该菜单', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.getRequest('/user/deleteUser?key='+userId).then(res => {
+          this.getRequest('/menu/deleteMenu?key='+menuId).then(res => {
             if (res.data.code == '00') {
               this.$message.success('删除成功');
               this.getList();

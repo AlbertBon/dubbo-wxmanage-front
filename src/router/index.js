@@ -45,7 +45,7 @@ export const constantRouterMap = [
   {
     path: '/admin',
     component: Layout,
-    redirect: '/admin/user/list',
+    redirect: 'admin/user/list',
     name: '系统管理',
     meta: { title: '系统管理', icon: 'fa fa-cogs' },
     children: [
