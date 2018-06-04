@@ -6,7 +6,7 @@
       @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-sizes="pageSizes"
-      :page-size="curPageSize"
+      :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="pageCount">
     </el-pagination>
@@ -19,7 +19,6 @@
     data(){
       return {
         currentPage:1,
-        curPageSize:2,
       }
     },
     props:{

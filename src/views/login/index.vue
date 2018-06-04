@@ -51,7 +51,9 @@
 
 <script>
   import {isvalidUsername} from '@/utils/validate'
+  import MenuUtils from '@/utils/MenuUtils'
 
+  var routers =[]
   export default {
     name: 'login',
     data() {
@@ -108,6 +110,7 @@
               if(data.code=='00'){
                 _this.$store.commit('SET_TOKEN', data.data.token);
                 _this.$store.commit('SET_NAME', data.data.name);
+                _this.handleMenuRouter(2)
                 console.log(_this.$store.getters.token);
                 _this.$router.push({path: '/'});
               }
@@ -124,6 +127,16 @@
           } else {
             console.log('error submit!!')
             return false
+          }
+        })
+      },
+      handleMenuRouter(userId){
+        this.getRequest('/menu/getMenuRouter?userId='+userId).then(res=>{
+          if(res.data.code=='00'){
+            MenuUtils(routers,res.data.data)
+            this.$store.state.app.menuRouterMap = this.$store.state.app.menuRouterMap.concat(routers)
+            console.log(this.$store.state.app.menuRouterMap)
+            this.$router.addRoutes(routers)
           }
         })
       }

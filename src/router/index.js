@@ -8,7 +8,7 @@ const _import = require('./_import_' + process.env.NODE_ENV)
 Vue.use(Router)
 
 /* Layout */
-import Layout from '../views/layout/Layout'
+import Layout from '@/views/layout/Layout'
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -25,7 +25,7 @@ import Layout from '../views/layout/Layout'
 export const constantRouterMap = [
   { path: '/login', component: _import('/login/index'), hidden: true },
   { path: '/404', component: _import('/404'), hidden: true },
-
+  { path: '*', redirect: '/404', hidden: true },
   {
     path: '',
     component: Layout,
@@ -35,41 +35,11 @@ export const constantRouterMap = [
       {
         path: 'home',
         name: '主页',
-        alwaysShow:false,
         component: _import('/dashboard/index'),
         meta: {title: '主页', icon: 'fa fa-home'}
       }
     ]
   },
-
-  {
-    path: '/admin',
-    component: Layout,
-    redirect: 'admin/user/list',
-    name: '系统管理',
-    meta: { title: '系统管理', icon: 'fa fa-cogs' },
-    children: [
-      {
-        path: 'user/list',
-        name: '用户管理',
-        component: _import('/admin/UserList'),
-        meta: { title: '用户管理', icon: 'fa fa-users' }
-      },
-      {
-        path: 'role/list',
-        name: '角色管理',
-        component: _import('/admin/RoleList'),
-        meta: { title: '角色管理', icon: 'fa fa-user-circle-o' }
-      },
-      {
-        path: 'menu/list',
-        name: '菜单管理',
-        component: _import('/admin/MenuList'),
-        meta: { title: '菜单管理', icon: 'fa fa-bars' }
-      },
-    ]
-  },
-  { path: '*', redirect: '/404', hidden: true }
 ]
 
 export default new Router({
