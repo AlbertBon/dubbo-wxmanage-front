@@ -8,24 +8,7 @@ var lazyLoading = (name) => () => import(`@/views${name}.vue`)
 function generaMenu(routers,data){
   data.forEach((item)=>{
     let menu = Object.assign({},item)//复制对象，转化为对象
-    // let menu = {}
-    // menu.name = item.name
-    // menu.path = item.path
-    // menu.title = item.title
     menu.component = lazyLoading(menu.component)
-    //
-    // if(item.redirect!=undefined){
-    //   menu.redirect = item.redirect
-    // }
-    // if(item.icon!=undefined){
-    //   menu.icon = item.icon
-    // }
-    // if(item.hidden!=undefined){
-    //   menu.hidden = item.hidden
-    // }
-    // if(item.alwaysShow!=undefined){
-    //   menu.alwaysShow = item.alwaysShow
-    // }
     if(item.children!=undefined&&item.children.length>0){
       menu.children = []
       generaMenu(menu.children,item.children)//递归组装子菜单

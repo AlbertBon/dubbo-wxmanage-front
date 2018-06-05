@@ -25,7 +25,7 @@ export default {
       'sidebar'
     ]),
     routes() {
-      return this.$store.state.app.menuRouterMap
+      return this.$router.options.routes.concat(this.$store.state.app.menuRouterMap)
     },
     isCollapse() {
       return !this.sidebar.opened

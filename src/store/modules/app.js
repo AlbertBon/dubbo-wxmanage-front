@@ -17,25 +17,7 @@ const app = {
      *   icon: 'svg-name'             the icon show in the sidebar,
      * }
      **/
-    menuRouterMap:[
-      { path: '/login', component: _import('/login/index'), hidden: true },
-      { path: '/404', component: _import('/404'), hidden: true },
-      { path: '*', redirect: '/404', hidden: true },
-      {
-        path: '',
-        component: Layout,
-        name: '主页',
-        redirect: 'home',
-        children: [
-          {
-            path: 'home',
-            name: '主页',
-            component: _import('/dashboard/index'),
-            meta: {title: '主页', icon: 'fa fa-home'}
-          }
-        ]
-      },
-    ],
+    menuRouterMap:[],
     sidebar: {
       opened: !+Cookies.get('sidebarStatus'),
       withoutAnimation: false
@@ -59,6 +41,9 @@ const app = {
     },
     TOGGLE_DEVICE: (state, device) => {
       state.device = device
+    },
+    INIT_MENU_ROUTER:(state,routers) =>{
+      state.menuRouterMap=state.menuRouterMap.concat(routers);
     }
   },
   actions: {
@@ -70,6 +55,9 @@ const app = {
     },
     ToggleDevice({ commit }, device) {
       commit('TOGGLE_DEVICE', device)
+    },
+    InitMenuRouter({ commit },routers){
+      commit('INIT_MENU_ROUTER',routers)
     }
   }
 }

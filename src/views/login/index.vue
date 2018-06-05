@@ -117,13 +117,6 @@
             }).catch(()=>{
               this.loading = false
             })
-            // this.loading = true
-            // this.$store.dispatch('Login', this.loginForm).then(() => {
-            //   this.loading = false
-            // this.$router.push({path: '/'})
-            // }).catch(() => {
-            //   this.loading = false
-            // })
           } else {
             console.log('error submit!!')
             return false
@@ -134,9 +127,11 @@
         this.getRequest('/menu/getMenuRouter?userId='+userId).then(res=>{
           if(res.data.code=='00'){
             MenuUtils(routers,res.data.data)
-            this.$store.state.app.menuRouterMap = this.$store.state.app.menuRouterMap.concat(routers)
+            window.sessionStorage.setItem('userMenu',res.data.data)
+            this.$store.dispatch('InitMenuRouter', routers)
+            console.log('获取菜单---')
             console.log(this.$store.state.app.menuRouterMap)
-            this.$router.addRoutes(routers)
+            this.$router.addRoutes(this.$store.state.app.menuRouterMap)
           }
         })
       }
