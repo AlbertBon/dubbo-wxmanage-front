@@ -44,7 +44,10 @@ const app = {
     },
     INIT_MENU_ROUTER:(state,routers) =>{
       state.menuRouterMap=state.menuRouterMap.concat(routers);
-    }
+    },
+    SET_MENU_ROUTER:(state,routers) =>{
+      Cookies.set('userMenu', routers)
+    },
   },
   actions: {
     ToggleSideBar: ({ commit }) => {
@@ -58,7 +61,10 @@ const app = {
     },
     InitMenuRouter({ commit },routers){
       commit('INIT_MENU_ROUTER',routers)
-    }
+    },
+    setMenuRouter({ commit },routers){
+      commit('SET_MENU_ROUTER',routers)
+    },
   }
 }
 

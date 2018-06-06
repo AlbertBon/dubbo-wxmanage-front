@@ -40,6 +40,33 @@ export const constantRouterMap = [
       }
     ]
   },
+  // {
+  //   path: '/admin',
+  //   component: Layout,
+  //   redirect: 'admin/user/list',
+  //   name: '系统管理',
+  //   meta: { title: '系统管理', icon: 'fa fa-cogs' },
+  //   children: [
+  //     {
+  //       path: 'user/list',
+  //       name: '用户管理',
+  //       component: _import('/admin/UserList'),
+  //       meta: { title: '用户管理', icon: 'fa fa-users' }
+  //     },
+  //     {
+  //       path: 'role/list',
+  //       name: '角色管理',
+  //       component: _import('/admin/RoleList'),
+  //       meta: { title: '角色管理', icon: 'fa fa-user-circle-o' }
+  //     },
+  //     {
+  //       path: 'menu/list',
+  //       name: '菜单管理',
+  //       component: _import('/admin/MenuList'),
+  //       meta: { title: '菜单管理', icon: 'fa fa-bars' }
+  //     },
+  //   ]
+  // },
 ]
 
 export default new Router({

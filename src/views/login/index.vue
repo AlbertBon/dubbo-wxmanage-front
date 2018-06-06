@@ -52,6 +52,7 @@
 <script>
   import {isvalidUsername} from '@/utils/validate'
   import MenuUtils from '@/utils/MenuUtils'
+  import Cookies from 'js-cookie'
 
   var routers =[]
   export default {
@@ -95,7 +96,7 @@
           this.pwdType = 'password'
         }
       },
-      refreshCode(){
+      refreshCode() {
         this.codeImg = process.env.BASE_API + '/login/getImageCode?random=' + Math.random();
       },
       handleLogin() {
@@ -107,14 +108,23 @@
             this.postRequest('/login/loginIn', this.loginForm).then(resp => {
               _this.loading = false;
               const data = resp.data;
-              if(data.code=='00'){
+              // _this.handleMenuRouter(2)
+              if (data.code == '00') {
+
                 _this.$store.commit('SET_TOKEN', data.data.token);
                 _this.$store.commit('SET_NAME', data.data.name);
-                _this.handleMenuRouter(2)
-                console.log(_this.$store.getters.token);
+
+                Cookies.set('userMenu', data.data.routers)
+                MenuUtils(routers, data.data.routers)
+                console.log('获取菜单---')
+                console.log(routers)
+                this.$store.dispatch('InitMenuRouter', routers)
+                this.$router.addRoutes(this.$store.state.app.menuRouterMap)
+                this.$router.addRoutes(this.$store.state.app.menuRouterMap)
+
                 _this.$router.push({path: '/'});
               }
-            }).catch(()=>{
+            }).catch(() => {
               this.loading = false
             })
           } else {
@@ -123,18 +133,6 @@
           }
         })
       },
-      handleMenuRouter(userId){
-        this.getRequest('/menu/getMenuRouter?userId='+userId).then(res=>{
-          if(res.data.code=='00'){
-            MenuUtils(routers,res.data.data)
-            window.sessionStorage.setItem('userMenu',res.data.data)
-            this.$store.dispatch('InitMenuRouter', routers)
-            console.log('获取菜单---')
-            console.log(this.$store.state.app.menuRouterMap)
-            this.$router.addRoutes(this.$store.state.app.menuRouterMap)
-          }
-        })
-      }
     }
   }
 </script>

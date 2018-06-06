@@ -1,5 +1,6 @@
 import router from './router'
 import store from './store'
+import Cookies from 'js-cookie'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
@@ -17,25 +18,32 @@ function hasPermission(roles, permissionRoles) {
 
 const whiteList = ['/login', '/authredirect']// no redirect whitelist
 
-let menuMap = store.state.app.menuRouterMap
-if(menuMap.length>0){
+let data = Cookies.get('userMenu')
+if (data){
   //这里是防止用户手动刷新页面，整个app要重新加载,动态新增的路由，会消失，所以我们重新add一次
-  // router.addRoutes(store.state.app.menuRouterMap)
+  let routers = []
+  MenuUtils(routers, JSON.parse(data))
+  console.log('---缓存中的菜单---')
+  console.log(routers)
+  store.dispatch('InitMenuRouter', routers)
+  router.addRoutes(store.state.app.menuRouterMap)
+  router.addRoutes(store.state.app.menuRouterMap)
 }
 
 router.beforeEach((to, from, next) => {
   NProgress.start(); // start progress bar
   console.log(to.path+'--'+from.path);
-  let data = window.sessionStorage.getItem('userMenu')
+  let data = Cookies.get('userMenu')
   if(data&&to.path === '/login'){
     //这里不使用router进行跳转，是因为，跳转到登录页面的时候，是需要重新登录，获取数据的，这个时候，会再次向router实例里面add路由规则，
     //而next()跳转过去之后，没有刷新页面，之前的规则还是存在的，但是使用location的话，可以刷新页面，当刷新页面的时候，整个app会重新加载
     //而我们在刷新之前已经把sessionStorage里的user移除了，所以上面的添加路由也不行执行
-    window.sessionStorage.removeItem('userMenu')
+    Cookies.remove('userMenu')
     window.location.href = '/'
     NProgress.done()
     return false
   }
+
   if (!data && to.path !== '/login') {
     next({ path: '/login' })
     NProgress.done()
@@ -48,6 +56,7 @@ router.beforeEach((to, from, next) => {
       NProgress.done()
     }
   }
+
   // if (getToken()) { // determine if there has token
   //   /* has token*/
   //   if (to.path === '/login') {
@@ -69,5 +78,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach(() => {
+
   NProgress.done() // finish progress bar
 })

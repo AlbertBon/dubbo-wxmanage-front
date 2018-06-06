@@ -34,10 +34,14 @@
           <span>{{scope.row.path}}</span>
         </template>
       </el-table-column>
-
       <el-table-column width="110px" align="center" label="菜单图标">
         <template slot-scope="scope">
           <span>{{scope.row.icon}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="110px" align="center" label="父菜单">
+        <template slot-scope="scope">
+          <span>{{scope.row.parentName}}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="130px" align="center" label="视图地址">
@@ -67,7 +71,7 @@
         <el-form-item v-show="false" prop="menuId">
           <el-input v-model="menuParams.menuId"></el-input>
         </el-form-item>
-        <el-form-item label="名称" prop="name">
+        <el-form-item :rules="{required:true,message:'名称不能为空',trigger:'blur'}" label="名称" prop="name">
           <el-input v-model="menuParams.name"></el-input>
         </el-form-item>
         <el-form-item label="链接地址" prop="path">
