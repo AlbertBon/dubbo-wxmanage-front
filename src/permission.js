@@ -27,7 +27,6 @@ if (data){
   console.log(routers)
   store.dispatch('InitMenuRouter', routers)
   router.addRoutes(store.state.app.menuRouterMap)
-  router.addRoutes(store.state.app.menuRouterMap)
 }
 
 router.beforeEach((to, from, next) => {

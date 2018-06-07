@@ -61,11 +61,26 @@
         <el-form-item label="标识" prop="roleFlag" >
           <el-input v-model="roleParams.roleFlag"></el-input>
         </el-form-item>
+        <el-form-item label="角色" prop="menuIds" >
+          <el-select v-model="roleParams.menuIds" filterable
+                     remote reserve-keyword  multiple placeholder="请选择" disabled>
+            <el-option v-for="item in menuList" :key="item.key" :label="item.label" :value="item.key">
+            </el-option>
+          </el-select><el-button type="primary" @click="handleMenu">选择</el-button>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button v-if="dialogTitle=='新增角色'" type="primary" @click="createRole">新增</el-button>
         <el-button v-else type="primary" @click="updateRole">修改</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="菜单选择" :visible.sync="dialogMenuVisible">
+      <el-transfer v-model="roleParams.menuIds" :data="menuList"></el-transfer>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogMenuVisible = false">取消</el-button>
+        <el-button @click="checkMenu">确定</el-button>
       </div>
     </el-dialog>
 
@@ -93,17 +108,21 @@
           list: []
         },
         dialogFormVisible: false,
+        dialogMenuVisible: false,
         dialogTitle: '',
         roleParams: {
+          menuIds:[],
         },
         rules:{
           roleName:[{required:true,message:'请输入角色名',trigger:'blur'}],
           roleFlag:[{required:true,message:'请输入角色标识',trigger:'blur'}],
         },
+        menuList:[]
       }
     },
     created() {
       this.getList()
+      this.getAllMenu()
     },
     methods: {
       getList() {
@@ -116,6 +135,22 @@
           }
         })
       },
+      getAllMenu(){
+        this.getRequest('/menu/getAllMenu').then(res=>{
+          if(res.data.code=='00'){
+            let resList= res.data.data
+            for(let i=0;i<resList.length;i++){
+              this.menuList.push({
+                key:resList[i].menuId,
+                label:resList[i].name,
+              })
+            }
+          }
+        })
+      },
+      checkMenu(){
+        this.dialogMenuVisible = false;
+      },
       handleSizeChange(size) {
         this.listParams.pageSize = size;
         this.getList();
@@ -123,6 +158,9 @@
       handleCurrentChange(currentPage) {
         this.listParams.pageNum = currentPage;
         this.getList();
+      },
+      handleMenu(){
+        this.dialogMenuVisible = true;
       },
       handleCreate() {
         if (this.$refs['roleForm']!==undefined) {
