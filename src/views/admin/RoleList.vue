@@ -42,12 +42,14 @@
       </el-table-column>
     </el-table>
 
+
     <pagination
       :pageSizes="pageSizes"
       :pageSize="listParams.pageSize"
       :pageCount="pageInfo.total"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"></pagination>
+
 
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible">
       <el-form ref="roleForm" :rules="rules" :model="roleParams" label-position="left" label-width="70px"
@@ -61,7 +63,7 @@
         <el-form-item label="标识" prop="roleFlag" >
           <el-input v-model="roleParams.roleFlag"></el-input>
         </el-form-item>
-        <el-form-item label="角色" prop="menuIds" >
+        <el-form-item label="菜单权限" prop="menuIds" >
           <el-select v-model="roleParams.menuIds" filterable
                      remote reserve-keyword  multiple placeholder="请选择" disabled>
             <el-option v-for="item in menuList" :key="item.key" :label="item.label" :value="item.key">
@@ -76,8 +78,9 @@
       </div>
     </el-dialog>
 
+
     <el-dialog title="菜单选择" :visible.sync="dialogMenuVisible">
-      <el-transfer v-model="roleParams.menuIds" :data="menuList"></el-transfer>
+      <el-transfer v-model="menuIds" :data="menuList"></el-transfer>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogMenuVisible = false">取消</el-button>
         <el-button @click="checkMenu">确定</el-button>
@@ -117,7 +120,8 @@
           roleName:[{required:true,message:'请输入角色名',trigger:'blur'}],
           roleFlag:[{required:true,message:'请输入角色标识',trigger:'blur'}],
         },
-        menuList:[]
+        menuList:[],
+        menuIds:[]
       }
     },
     created() {
@@ -150,6 +154,7 @@
       },
       checkMenu(){
         this.dialogMenuVisible = false;
+        this.roleParams.menuIds = this.menuIds;
       },
       handleSizeChange(size) {
         this.listParams.pageSize = size;
@@ -161,6 +166,7 @@
       },
       handleMenu(){
         this.dialogMenuVisible = true;
+        this.menuIds = this.roleParams.menuIds;
       },
       handleCreate() {
         if (this.$refs['roleForm']!==undefined) {

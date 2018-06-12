@@ -119,6 +119,7 @@
     data() {
       var validatePassword = (rule,value,callback)=>{
         if(!value&&this.dialogTitle=='新增用户'){
+          rule.required = true;
           return callback(new Error('请输入密码'))
         }else {
           return callback()
